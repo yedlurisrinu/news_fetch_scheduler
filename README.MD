@@ -22,14 +22,14 @@ A Python service that aggregates news articles from multiple RSS feeds and the N
 
 The scheduler wakes up every **30 minutes**, fetches articles from:
 
-| Source | Type |
-|---|---|
-| BBC | RSS |
-| Reuters | RSS |
-| TechCrunch | RSS |
-| Wired | RSS |
-| Hacker News | RSS |
-| NewsAPI | REST API |
+| Source      | Type     |
+|-------------|----------|
+| BBC         | RSS      |
+| Reuters     | RSS      |
+| TechCrunch  | RSS      |
+| Wired       | RSS      |
+| Hacker News | RSS      |
+| NewsAPI     | REST API |
 
 Each article is identified by an MD5 hash of `link + published_at + source`. Articles already seen within the last 2 days (checked via an in-memory cache backed by PostgreSQL) are skipped. New articles are published as JSON messages to a Confluent Kafka topic.
 
@@ -63,13 +63,13 @@ main.py
 
 ### Prerequisites
 
-| Dependency | Purpose |
-|---|---|
-| Python 3.12 | Runtime |
-| PostgreSQL | Article deduplication state |
-| Apache Kafka (Confluent) | Message queue |
-| HashiCorp Vault | Secrets management |
-| NewsAPI key | Top-headlines API |
+| Dependency               | Purpose                     |
+|--------------------------|-----------------------------|
+| Python 3.12              | Runtime                     |
+| PostgreSQL               | Article deduplication state |
+| Apache Kafka (Confluent) | Message queue               |
+| HashiCorp Vault          | Secrets management          |
+| NewsAPI key              | Top-headlines API           |
 
 The service expects two external Docker networks to exist:
 
@@ -84,26 +84,26 @@ docker network create infra-network
 
 All secrets are loaded from HashiCorp Vault at startup. Set the following environment variables before running:
 
-| Variable | Description |
-|---|---|
-| `VAULT_ADDR` | Vault server URL (e.g. `http://vault-server:8200`) |
-| `VAULT_TOKEN` | Vault access token |
+| Variable            | Description                                         |
+|---------------------|-----------------------------------------------------|
+| `VAULT_ADDR`        | Vault server URL (e.g. `http://vault-server:8200`)  |
+| `VAULT_TOKEN`       | Vault access token                                  |
 | `VAULT_SECRET_PATH` | Path to the secret (e.g. `secret/NEWS_SUMMARY_APP`) |
 
 The Vault secret must contain the following keys:
 
-| Key | Description |
-|---|---|
-| `API.NEWS_API_KEY` | NewsAPI.org API key |
-| `POSTGRES.host` | PostgreSQL host |
-| `POSTGRES.dbname` | Database name |
-| `POSTGRES.user` | Database user |
-| `POSTGRES.password` | Database password |
-| `POSTGRES.port` | Database port |
+| Key                           | Description               |
+|-------------------------------|---------------------------|
+| `API.NEWS_API_KEY`            | NewsAPI.org API key       |
+| `POSTGRES.host`               | PostgreSQL host           |
+| `POSTGRES.dbname`             | Database name             |
+| `POSTGRES.user`               | Database user             |
+| `POSTGRES.password`           | Database password         |
+| `POSTGRES.port`               | Database port             |
 | `CONFLUENT.bootstrap.servers` | Kafka bootstrap server(s) |
-| `CONFLUENT.sasl.username` | Kafka SASL username |
-| `CONFLUENT.sasl.password` | Kafka SASL password |
-| `CONFLUENT.client.id` | Kafka client ID |
+| `CONFLUENT.sasl.username`     | Kafka SASL username       |
+| `CONFLUENT.sasl.password`     | Kafka SASL password       |
+| `CONFLUENT.client.id`         | Kafka client ID           |
 
 Static settings (RSS feed URLs, Kafka topic name, schedule interval) are in `src/config/settings.py`.
 
@@ -214,11 +214,20 @@ news_fetch_scheduler/
 
 The demo folder will contain:
 
-| File | Description |
-|---|---|
-| `demo/README.md` | Step-by-step instructions to run the demo end-to-end |
-| `demo/*.cast` / `demo/*.gif` | Terminal recordings of the scheduler in action |
-| `demo/*.png` | Screenshots of Kafka topic messages and PostgreSQL dedup table |
+| File                                                | Description                                                 |
+|-----------------------------------------------------|-------------------------------------------------------------|
+| `demo/confluent_kafka_setup.png`                    | Confluent cluster over view with cluster, tipic information |
+| `demo/confluent_production_consumption_metrics.png` | Topic producer and consumer metrics                         |
+| `demo/confluent_topic_details.png`                  | Topic creation details, location, provider information      |
+| `demo/confluent_topic_general_settings.png`         | Topic partition, retention settings details                 |
+| `demo/confluent_topic_messages.png`                 | High level message tracking details                         |
+| `demo/confluent_topic_messages_details.png`         | A perticular message payload details                        |
+| `demo/confluent_topic_overview.png`                 | Graphical overview of the topic                             |
+| `demo/confluent_topic_details.png`                  | Topic creation details                                      |
+| `demo/scheduler_ingester_pipeline_logs.png`         | Scheduler and publisher logs                                |
+| `demo/services_running_on_locale_docker.png`        | Active service running on local host docker instance        |
+
+
 
 To play a terminal recording (`.cast` file) locally:
 
